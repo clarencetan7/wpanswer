@@ -44,12 +44,25 @@ public class WpExamTests {
     }
 
     @Test
-    public void employedScenarioCalculation(){
+    public void checkEmployedScenarioCalculation(){
         String expectedResultingHeading = "At age 65, your KiwiSaver balance is estimated to be:";
         String expectedResultingValue = "$279,558";
         homePage.openKiwiSaverRetirementCalculator();
         List<String> valuesAfterCalculation = wpKiwiSavRetCalcPage.setEmployedCalculatorInputs("30", EmploymentStatus.EMPLYD, "82000",
                 KiwiSaverContrib.FOUR, PIRPercentage.SEVENTEENPT5, RiskProfile.HIGH);
+        Assert.assertEquals(expectedResultingHeading, valuesAfterCalculation.get(0),
+                "The expected resulting heading message after calculation (" + expectedResultingHeading + ") was not equal to actual (" + valuesAfterCalculation.get(0) + "). ");
+        Assert.assertEquals(expectedResultingValue, valuesAfterCalculation.get(1),
+                "The expected balance value after calculation (" + expectedResultingValue + ") was not equal to actual (" + valuesAfterCalculation.get(1) + "). ");
+    }
+
+    @Test
+    public void checkSelfEmployedScenarioCalculation(){
+        String expectedResultingHeading = "At age 65, your KiwiSaver balance is estimated to be:";
+        String expectedResultingValue = "$212,440";
+        homePage.openKiwiSaverRetirementCalculator();
+        List<String> valuesAfterCalculation = wpKiwiSavRetCalcPage.setSelfEmployedCalculatorInputs("45",EmploymentStatus.SELF_EMPLYD, PIRPercentage.TENPT5,
+                "100000", "90", VoluntaryFreq.FORTNIGHTLY, RiskProfile.MED,"290000");
         Assert.assertEquals(expectedResultingHeading, valuesAfterCalculation.get(0),
                 "The expected resulting heading message after calculation (" + expectedResultingHeading + ") was not equal to actual (" + valuesAfterCalculation.get(0) + "). ");
         Assert.assertEquals(expectedResultingValue, valuesAfterCalculation.get(1),

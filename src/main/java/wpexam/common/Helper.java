@@ -26,4 +26,8 @@ public class Helper {
         LOW, MED, HIGH
     }
 
+    public enum VoluntaryFreq{
+        ONEOFF, WEEKLY, FORTNIGHTLY, MONTHLY, ANNUALLY
+    }
+
 }

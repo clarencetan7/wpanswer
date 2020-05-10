@@ -25,6 +25,10 @@ public class WpKiwiSaverRetirementCalcPage extends BasePage {
     private static LocatorWrapper COMPUTE_BTN = new LocatorWrapper("View your KiwiSaver button", "//button[contains(@class,'btn-has-chevron')]", LocatorWrapper.LocatorType.XPATH);
     private static LocatorWrapper RESULT_TITLE = new LocatorWrapper("KiwiSaver calculation result title", "//div[@class='results-header']/.//span[contains(@class,'result-title')]", LocatorWrapper.LocatorType.XPATH);
     private static LocatorWrapper RESULT_VALUE = new LocatorWrapper("KiwiSaver calculation result value", "//div[@class='results-header']/.//span[contains(@class,'result-value')]", LocatorWrapper.LocatorType.XPATH);
+    private static LocatorWrapper KIWI_SAVER_BAL_IP = new LocatorWrapper("KiwiSaver balance input", "//div[@help-id='KiwiSaverBalance']/.//input", LocatorWrapper.LocatorType.XPATH);
+    private static LocatorWrapper KIWI_SAVER_VOLUNTARY_IP = new LocatorWrapper("KiwiSaver voluntary contribution input", "//div[@help-id='VoluntaryContributions']/.//input", LocatorWrapper.LocatorType.XPATH);
+    private static LocatorWrapper KIWI_SAVER_VOLUNTARY_FREQ = new LocatorWrapper("KiwiSaver voluntary contribution DD frequency", "(//div[@help-id='VoluntaryContributions']/.//div[@class='control-well'])[2]", LocatorWrapper.LocatorType.XPATH);
+    private static LocatorWrapper SAVINGS_GOAL_IP = new LocatorWrapper("Savings goal input", "//div[@help-id='SavingsGoal']/.//input", LocatorWrapper.LocatorType.XPATH);
 
     public WpKiwiSaverRetirementCalcPage(WebDriver driver) {
         super(driver);
@@ -62,6 +66,33 @@ public class WpKiwiSaverRetirementCalcPage extends BasePage {
         setRiskProfile(riskPro);
         scrollIntoView(COMPUTE_BTN);
         Helper.sleepInMillis(200);
+        findElementWhenPresent(COMPUTE_BTN).click();
+        resultingCalculation.add(findElementWhenVisible(RESULT_TITLE).getText());
+        resultingCalculation.add(findElementWhenVisible(RESULT_VALUE).getText().replaceAll("\\n", ""));
+        return resultingCalculation;
+    }
+
+    public List<String> setSelfEmployedCalculatorInputs(String age, EmploymentStatus stat, PIRPercentage pirOpt, String kiwiSaverBal,
+                                                        String voluntaryContrib, VoluntaryFreq freq, RiskProfile riskPro, String savingsGoal){
+        List<String> resultingCalculation = new ArrayList<String>();
+        moveToCalculatorContent();
+        Helper.sleepInMillis(1500);
+        findElementWhenPresent(CURRENT_AGE_IP).sendKeys(age);
+        findElementWhenVisible(CURRENT_AGE_LABEL).click();
+        findElementWhenVisible(EMPL_STAT_DD).click();
+        setEmploymentStatus(stat);
+        findElementWhenVisible(PIR_DD).click();
+        setPIRPercentageRate(pirOpt);
+        findElementWhenVisible(CURRENT_AGE_LABEL).click();
+        findElementWhenPresent(KIWI_SAVER_BAL_IP).sendKeys(kiwiSaverBal);
+        findElementWhenVisible(CURRENT_AGE_LABEL).click();
+        findElementWhenPresent(KIWI_SAVER_VOLUNTARY_IP).sendKeys(voluntaryContrib);
+        findElementWhenVisible(CURRENT_AGE_LABEL).click();
+        findElementWhenPresent(KIWI_SAVER_VOLUNTARY_FREQ).click();
+        setKiwiSaverVoluntaryFreq(freq);
+        setRiskProfile(riskPro);
+        findElementWhenPresent(SAVINGS_GOAL_IP).sendKeys(savingsGoal);
+        scrollIntoView(COMPUTE_BTN);
         findElementWhenPresent(COMPUTE_BTN).click();
         resultingCalculation.add(findElementWhenVisible(RESULT_TITLE).getText());
         resultingCalculation.add(findElementWhenVisible(RESULT_VALUE).getText().replaceAll("\\n", ""));
@@ -111,6 +142,42 @@ public class WpKiwiSaverRetirementCalcPage extends BasePage {
                         new LocatorWrapper("28% option", pirRateSelect("28%"),
                                 LocatorWrapper.LocatorType.XPATH);
                 findElementWhenPresent(pirPercentageOption).click();
+        }
+    }
+
+    protected void setKiwiSaverVoluntaryFreq(VoluntaryFreq freq){
+        LocatorWrapper frequencyOption = null;
+        switch (freq){
+            case ONEOFF:
+                frequencyOption =
+                        new LocatorWrapper("One-Off option", voluntaryKSFreqSelect("One-off"),
+                                LocatorWrapper.LocatorType.XPATH);
+                findElementWhenPresent(frequencyOption).click();
+                break;
+            case WEEKLY:
+                frequencyOption =
+                        new LocatorWrapper("Weekly option", voluntaryKSFreqSelect("Weekly"),
+                                LocatorWrapper.LocatorType.XPATH);
+                findElementWhenPresent(frequencyOption).click();
+                break;
+            case FORTNIGHTLY:
+                frequencyOption =
+                        new LocatorWrapper("Fortnightly option", voluntaryKSFreqSelect("Fortnightly"),
+                                LocatorWrapper.LocatorType.XPATH);
+                findElementWhenPresent(frequencyOption).click();
+                break;
+            case MONTHLY:
+                frequencyOption =
+                        new LocatorWrapper("Monthly option", voluntaryKSFreqSelect("Monthly"),
+                                LocatorWrapper.LocatorType.XPATH);
+                findElementWhenPresent(frequencyOption).click();
+                break;
+            default:
+                frequencyOption =
+                        new LocatorWrapper("Annually option", voluntaryKSFreqSelect("Annually"),
+                                LocatorWrapper.LocatorType.XPATH);
+                findElementWhenPresent(frequencyOption).click();
+                break;
         }
     }
 
@@ -168,5 +235,6 @@ public class WpKiwiSaverRetirementCalcPage extends BasePage {
 
     private String employmentStatusSelect(String status){ return "//div[@help-id='EmploymentStatus']/.//span[text()='" + status + "']";}
     private String pirRateSelect(String percentage){ return "//div[@help-id='PIRRate']/.//span[text()='" + percentage + "']";}
+    private String voluntaryKSFreqSelect(String freq){ return "//div[@help-id='VoluntaryContributions']/.//span[text()='" + freq + "']";}
 
 }
