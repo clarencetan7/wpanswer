@@ -46,6 +46,7 @@ public class WpKiwiSaverRetirementCalcPage extends BasePage {
 
     public String openCurrentAgeInformation(){
         getInformationIcons().get(0).click();
+        Helper.sleepInMillis(150);
         return findElementWhenPresent(CURRENT_AGE_INFO).getText();
     }
 
@@ -72,7 +73,7 @@ public class WpKiwiSaverRetirementCalcPage extends BasePage {
         return resultingCalculation;
     }
 
-    public List<String> setSelfEmployedCalculatorInputs(String age, EmploymentStatus stat, PIRPercentage pirOpt, String kiwiSaverBal,
+    public List<String> setSelfOrUnEmployedCalculatorInputs(String age, EmploymentStatus stat, PIRPercentage pirOpt, String kiwiSaverBal,
                                                         String voluntaryContrib, VoluntaryFreq freq, RiskProfile riskPro, String savingsGoal){
         List<String> resultingCalculation = new ArrayList<String>();
         moveToCalculatorContent();

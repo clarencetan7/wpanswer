@@ -61,8 +61,21 @@ public class WpExamTests {
         String expectedResultingHeading = "At age 65, your KiwiSaver balance is estimated to be:";
         String expectedResultingValue = "$212,440";
         homePage.openKiwiSaverRetirementCalculator();
-        List<String> valuesAfterCalculation = wpKiwiSavRetCalcPage.setSelfEmployedCalculatorInputs("45",EmploymentStatus.SELF_EMPLYD, PIRPercentage.TENPT5,
+        List<String> valuesAfterCalculation = wpKiwiSavRetCalcPage.setSelfOrUnEmployedCalculatorInputs("45",EmploymentStatus.SELF_EMPLYD, PIRPercentage.TENPT5,
                 "100000", "90", VoluntaryFreq.FORTNIGHTLY, RiskProfile.MED,"290000");
+        Assert.assertEquals(expectedResultingHeading, valuesAfterCalculation.get(0),
+                "The expected resulting heading message after calculation (" + expectedResultingHeading + ") was not equal to actual (" + valuesAfterCalculation.get(0) + "). ");
+        Assert.assertEquals(expectedResultingValue, valuesAfterCalculation.get(1),
+                "The expected balance value after calculation (" + expectedResultingValue + ") was not equal to actual (" + valuesAfterCalculation.get(1) + "). ");
+    }
+
+    @Test
+    public void checkUnemployedScenarioCalculation(){
+        String expectedResultingHeading = "At age 65, your KiwiSaver balance is estimated to be:";
+        String expectedResultingValue = "$168,425";
+        homePage.openKiwiSaverRetirementCalculator();
+        List<String> valuesAfterCalculation = wpKiwiSavRetCalcPage.setSelfOrUnEmployedCalculatorInputs("55",EmploymentStatus.NOT_EMPLYD, PIRPercentage.TENPT5,
+                "140000", "10", VoluntaryFreq.ANNUALLY, RiskProfile.MED,"200000");
         Assert.assertEquals(expectedResultingHeading, valuesAfterCalculation.get(0),
                 "The expected resulting heading message after calculation (" + expectedResultingHeading + ") was not equal to actual (" + valuesAfterCalculation.get(0) + "). ");
         Assert.assertEquals(expectedResultingValue, valuesAfterCalculation.get(1),
